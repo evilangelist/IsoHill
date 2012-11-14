@@ -28,7 +28,7 @@ package isohill.tmx
 		public var tileWidth:int=0; // pixel size of cell width
 		public var tileHeight:int = 0; // pixel size of cell height
 		// --- layer data accessibile by both vector and dictionary
-		public var layersArray:Vector.<TMXLayer>; // layers of a grid of ints
+		public var layersArray:Vector.<TMXTileLayer>; // layers of a grid of ints
 		public var layersHash:Dictionary; // key is the layer name; values are TMXLayer
 		// --- object layer data accessibile by both vector and dictionary
 		public var objectsArray:Vector.<TMXObjectgroup>; // layers of TMXObjectgroup
@@ -95,6 +95,7 @@ package isohill.tmx
 				group.height = groupBlock.@height;
 				group.width = groupBlock.@width;
 				group.name = groupBlock.@name;
+                group.index = groupBlock.childIndex();
 				// parse those properties
 				for each(var propBlock:XML in groupBlock.elements("properties").elements("property")) {
 					group.properties[String(propBlock.@name)] = String(propBlock.@value);
@@ -106,6 +107,8 @@ package isohill.tmx
 					maxGid = Math.max(obj.gid, maxGid);
 					obj.x = Number(objBlock.@x);
 					obj.y = Number(objBlock.@y);
+					obj.width = Number(objBlock.@width);
+					obj.height = Number(objBlock.@height);
 					obj.type = objBlock.@type;
 					obj.name = objBlock.@name;
 					for each(var propObjBlock:XML in objBlock.elements("properties").elements("property")) {
@@ -120,7 +123,7 @@ package isohill.tmx
 		}
 		private function parseLayers():void {
 			var layerBlocks:XMLList = data.layer;
-			layersArray = new Vector.<TMXLayer>(layerBlocks.length(), true);
+			layersArray = new Vector.<TMXTileLayer>(layerBlocks.length(), true);
 			layersHash = new Dictionary();
 			var y:int = 0;
 			for each(var layerBlock:XML in layerBlocks) {
@@ -128,7 +131,7 @@ package isohill.tmx
 				var h:int = int(layerBlock.@height);
 				var name:String = layerBlock.@name;
 				var encoding:String = layerBlock.data.@encoding;
-				var layer:TMXLayer;
+				var layer:TMXTileLayer;
 				if (encoding == "base64") {
 					var compression:String = layerBlock.data.@compression; 
 					if (compression != "zlib" && compression.length > 0)
@@ -136,7 +139,7 @@ package isohill.tmx
 					layer = Base64.base64ToTMXLayer(layerBlock.data[0], w, h, compression == "zlib");
 				}
 				else if (encoding == "csv") {
-					layer = TMXLayer.fromCSV(layerBlock, w, h);
+					layer = TMXTileLayer.fromCSV(layerBlock, w, h);
 				}
 				else throw new Error("Invalid tmx encoding: " + encoding);
 				
@@ -144,6 +147,7 @@ package isohill.tmx
 				layersArray[y++] = layer;
 				layersHash[name] = layer;
 				layer.name = name;
+                layer.index = layerBlock.childIndex();
 			}
 		}
 		// Handlers loading the TMX file for you

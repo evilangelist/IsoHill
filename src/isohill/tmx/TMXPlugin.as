@@ -80,21 +80,41 @@ package isohill.tmx
 		private function makeSprites(cellX:int, cellY:int):void {
 			// in layers
 			for (var i:int = 0; i < tmx.layersArray.length; i++) {
-				var layer:TMXLayer = tmx.layersArray[i]; if (layer == null) continue;
-				var _cell:int = layer.getCell(cellX, cellY); // temp
-				if (_cell == 0 || isNaN(_cell)) continue;
-				var grid:GridDisplay = linkedLayer[i];
-				var pt3:Point3 = grid.toLayerPt(cellX, cellY);
-				var name:String = tmx.getImgSrc(_cell) + "_" + (iSprite++);
-				var assetID:String = tmx.getImgSrc(_cell);
-				var sprite:IsoMovieClip = new IsoMovieClip(assetID, name, pt3, new State("", 0, 0, true));//IsoSprite = new IsoSprite(assetID, name, pt3);
-				sprite.currentFrame = tmx.getImgFrame(_cell);
-				
-				grid.add(sprite);
+				var layer:TMXTileLayer = tmx.layersArray[i];
+                if (layer == null) {
+                    continue;
+                }
+                makeLayerSprites(layer, linkedLayer[i], cellX, cellY);
+
+//				var _cell:int = layer.getCell(cellX, cellY); // temp
+//				if (_cell == 0 || isNaN(_cell)) continue;
+//				var grid:GridDisplay = linkedLayer[i];
+//				var pt3:Point3 = grid.toLayerPt(cellX, cellY);
+//				var name:String = tmx.getImgSrc(_cell) + "_" + (iSprite++);
+//				var assetID:String = tmx.getImgSrc(_cell);
+//				var sprite:IsoMovieClip = new IsoMovieClip(assetID, name, pt3, new State("", 0, 0, true));//IsoSprite = new IsoSprite(assetID, name, pt3);
+//				sprite.currentFrame = tmx.getImgFrame(_cell);
+//
+//				grid.add(sprite);
 			}
 			// in object layers
 			
 		}
+
+        private function makeLayerSprites(layer:TMXTileLayer, grid:GridDisplay,  cellX:int, cellY:int):void {
+            var _cell:int = layer.getCell(cellX, cellY); // temp
+            if (_cell == 0 || isNaN(_cell)) {
+                return;
+            }
+            var pt3:Point3 = grid.toLayerPt(cellX, cellY);
+            var name:String = tmx.getImgSrc(_cell) + "_" + (iSprite++);
+            var assetID:String = tmx.getImgSrc(_cell);
+            var sprite:IsoMovieClip = new IsoMovieClip(assetID, name, pt3, new State("", 0, 0, true));//IsoSprite = new IsoSprite(assetID, name, pt3);
+            sprite.currentFrame = tmx.getImgFrame(_cell);
+
+            grid.add(sprite);
+        }
+
 		/**
 		 * Converts a TMX object layer into a existing grid layer 
 		 * @param grid

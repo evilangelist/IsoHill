@@ -16,7 +16,7 @@ package
 	import isohill.plugins.XRayLayers;
 	import isohill.Point3;
 	import isohill.tmx.TMX;
-	import isohill.tmx.TMXLayer;
+	import isohill.tmx.TMXTileLayer;
 	import isohill.tmx.TMXPlugin;
 	import isohill.utils.Point3Input;
 	import starling.display.Sprite;
@@ -60,7 +60,7 @@ package
 			var tmxPlugin:TMXPlugin = new TMXPlugin(tmx); // plugin to bind the TMX data to the engine
 			// link the TMX layers to engine layers (allows for optional "in-between" layers)
 			for (var i:int = 0; i < tmx.layersArray.length; i++) {
-				var layer:TMXLayer = tmx.layersArray[i];
+				var layer:TMXTileLayer = tmx.layersArray[i];
 				var layerName:String = layer.name;
 				var grid:GridDisplay = tmxPlugin.makeEmptyGridOfSize(i, layerName);
 				if (layerName.indexOf("earth") != -1) grid.flatten(); // disable sorting and flatten the ground as it is not dynamic (speed improvement)

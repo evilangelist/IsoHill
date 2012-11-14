@@ -9,23 +9,29 @@
 */
 package isohill.tmx 
 {
-	import isohill.GridInt;
+import flash.utils.Dictionary;
+
+import isohill.GridInt;
 	/**
 	 * Represents a TMX layer of ints
 	 * @author Jonathan Dunlap
 	 */
-	public class TMXLayer extends GridInt
+	public class TMXTileLayer extends GridInt implements TMXLayer
 	{
 		public var maxGid:int = 0; // what's the highest asset id referenced
-		public var name:String;
-		public function TMXLayer(w:int, h:int) 
+		private var _name:String;
+
+        private var _index:int;
+        private var _properties:Dictionary = new Dictionary();
+
+        public function TMXTileLayer(w:int, h:int)
 		{
 			super(w, h);
 		}
-		public static function fromCSV(layerBlock:XML, width:int, height:int):TMXLayer {
+		public static function fromCSV(layerBlock:XML, width:int, height:int):TMXTileLayer {
 			var layerRaw:Array = layerBlock.data[0].toString().split(",");
 
-			var layer:TMXLayer = new TMXLayer(width, height);
+			var layer:TMXTileLayer = new TMXTileLayer(width, height);
 			var index:int = 0;
 			for each(var cell:String in layerRaw) {
 					cell = cell.replace("\n", ""); // remove those line breaks in the cvs data
@@ -37,6 +43,31 @@ package isohill.tmx
 			trace("csv layer parsing done");
 			return layer;
 		}
-	}
+
+
+        public function get name():String {
+            return _name;
+        }
+
+        public function set name(value:String):void {
+            _name = value;
+        }
+
+        public function get index():int {
+            return _index;
+        }
+
+        public function set index(value:int):void {
+            _index = value;
+        }
+
+        public function get properties():Dictionary {
+            return _properties;
+        }
+
+        public function set properties(value:Dictionary):void {
+            _properties = value;
+        }
+    }
 
 }

@@ -13,7 +13,7 @@ package isohill
 	import flash.utils.Dictionary;
 	
 	import isohill.plugins.IPlugin;
-	import isohill.tmx.TMXLayer;
+	import isohill.tmx.TMXTileLayer;
 	
 	import starling.animation.IAnimatable;
 	import starling.animation.Juggler;

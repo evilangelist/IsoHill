@@ -19,6 +19,8 @@ package isohill.tmx
 	{
 		public var x:Number;
 		public var y:Number;
+        public var width:Number;
+        public var height:Number;
 		public var name:String;
 		public var type:String;
 		public var gid:int;

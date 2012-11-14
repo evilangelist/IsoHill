@@ -17,8 +17,8 @@ package isohill
 	public class GridInt 
 	{
 		private var data:Vector.<int>;
-		private var width:int=0;
-		private var height:int=0;
+		private var _width:int=0;
+		private var _height:int=0;
 		/**
 		 * Constructor 
 		 * @param width number of cells wide
@@ -27,8 +27,8 @@ package isohill
 		 */		
 		public function GridInt(width:int, height:int) 
 		{
-			this.width = width;
-			this.height = height;
+			this._width = width;
+			this._height = height;
 			if (width == 0 && height == 0) throw new Error("Invalid starting size of 0,0");
 			width = Math.max(width, 1); // ensure that it's not zero as an example of 0 width times 1 height would be zero
 			height = Math.max(height, 1); // same here
@@ -41,8 +41,8 @@ package isohill
 		 */		
 		public function toString():String {
 			var result:String = "";
-			for (var y:int = 0; y < height; y++) {
-				for (var x:int = 0; x < width; x++) {
+			for (var y:int = 0; y < _height; y++) {
+				for (var x:int = 0; x < _width; x++) {
 					result += getCell(x, y).toString();
 				}
 				result += "\n";
@@ -57,7 +57,7 @@ package isohill
 		 * 
 		 */		
 		public function getCell(x:int, y:int):int {
-			var index:int = y * width + x; // get the index of the single array for the grid position
+			var index:int = y * _width + x; // get the index of the single array for the grid position
 			return data[index];
 		}
 		/**
@@ -69,9 +69,26 @@ package isohill
 		 * 
 		 */
 		public function setCell(x:int, y:int, value:int):int {
-			var index:int = y * width + x; // get the index of the single array for the grid position
+			var index:int = y * _width + x; // get the index of the single array for the grid position
 			return data[index] = value;
 		}
-	}
+
+
+        public function get width():int {
+            return _width;
+        }
+
+        public function set width(value:int):void {
+            _width = value;
+        }
+
+        public function get height():int {
+            return _height;
+        }
+
+        public function set height(value:int):void {
+            _height = value;
+        }
+    }
 
 }

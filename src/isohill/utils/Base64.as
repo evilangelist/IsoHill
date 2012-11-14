@@ -9,16 +9,16 @@ package isohill.utils
 	import flash.utils.Endian;
 	import flash.utils.getTimer;
 	import isohill.GridInt;
-	import isohill.tmx.TMXLayer;
+	import isohill.tmx.TMXTileLayer;
 	/**
 	 * Base64 utils
 	 */
 	public class Base64 
 	{
 		private static const BASE64_CHARS:String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-		public static function base64ToTMXLayer(chunk:String, width:int, height:int, compressed:Boolean):TMXLayer
+		public static function base64ToTMXLayer(chunk:String, width:int, height:int, compressed:Boolean):TMXTileLayer
 		{
-			var result:TMXLayer = new TMXLayer(width, height);
+			var result:TMXTileLayer = new TMXTileLayer(width, height);
 			var data:ByteArray = base64ToByteArray(chunk);
 			if(compressed)
 				data.uncompress();

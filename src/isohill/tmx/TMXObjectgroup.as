@@ -14,21 +14,77 @@ package isohill.tmx
 	 * TMX objectgroup element
 	 * @author Jonathan Dunlap
 	 */
-	public class TMXObjectgroup 
+	public class TMXObjectgroup implements TMXLayer
 	{
-		public var name:String;
-		public var width:Number;
-		public var height:Number;
+		private var _name:String;
+		private var _width:int;
+		private var _height:int;
+
+        private var _index:int;
 		
-		public var properties:Dictionary = new Dictionary();
-		public var objects:Vector.<TMXObject> = new <TMXObject>[];
-		public var objectsHash:Dictionary = new Dictionary();
+		private var _properties:Dictionary = new Dictionary();
+		private var _objects:Vector.<TMXObject> = new <TMXObject>[];
+		private var _objectsHash:Dictionary = new Dictionary();
 		
-		public function TMXObjectgroup() 
-		{
-			
+		public function TMXObjectgroup() {
 		}
-		
-	}
+
+
+        public function get name():String {
+            return _name;
+        }
+
+        public function set name(value:String):void {
+            _name = value;
+        }
+
+        public function get width():int {
+            return _width;
+        }
+
+        public function set width(value:int):void {
+            _width = value;
+        }
+
+        public function get height():int {
+            return _height;
+        }
+
+        public function set height(value:int):void {
+            _height = value;
+        }
+
+        public function get index():int {
+            return _index;
+        }
+
+        public function set index(value:int):void {
+            _index = value;
+        }
+
+        public function get properties():Dictionary {
+            return _properties;
+        }
+
+        public function set properties(value:Dictionary):void {
+            _properties = value;
+        }
+
+        public function get objects():Vector.<TMXObject> {
+            return _objects;
+        }
+
+        public function set objects(value:Vector.<TMXObject>):void {
+            _objects = value;
+        }
+
+        public function get objectsHash():Dictionary {
+            return _objectsHash;
+        }
+
+        public function set objectsHash(value:Dictionary):void {
+            _objectsHash = value;
+        }
+    }
 
 }
