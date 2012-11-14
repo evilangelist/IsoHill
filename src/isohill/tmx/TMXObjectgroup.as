@@ -29,6 +29,13 @@ package isohill.tmx
 		public function TMXObjectgroup() {
 		}
 
+        public function getType():String {
+            return 'objectLayer';
+        }
+
+        public function hash():String {
+            return getType() + name + index;
+        }
 
         public function get name():String {
             return _name;

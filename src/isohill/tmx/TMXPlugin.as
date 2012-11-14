@@ -7,23 +7,19 @@
 * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 */
-package isohill.tmx 
-{
-	import isohill.AssetManager;
-	import isohill.components.AsyncTexture;
-	import isohill.GridDisplay;
-	import isohill.IsoHill;
-	import isohill.IsoMovieClip;
-	import isohill.IsoSprite;
-	import isohill.projections.IsoProjection;
-	import isohill.loaders.TextureLoader;
-	import isohill.loaders.SpriteSheetLoader;
-	import isohill.plugins.IPlugin;
-	import isohill.Point3;
-	import isohill.State;
-	import starling.display.MovieClip;
-	import starling.textures.Texture;
-	import starling.textures.TextureSmoothing;
+package isohill.tmx {
+
+import flash.utils.Dictionary;
+
+import isohill.AssetManager;
+import isohill.GridDisplay;
+import isohill.IsoHill;
+import isohill.IsoMovieClip;
+import isohill.loaders.SpriteSheetLoader;
+import isohill.plugins.IPlugin;
+import isohill.Point3;
+import isohill.State;
+
 	/**
 	 * The TMX plugin for the engine to bind the data to the renderer.
 	 * @author Jonathan Dunlap
@@ -56,6 +52,9 @@ package isohill.tmx
 					makeSprites(x, y);
 				}
 			}
+
+            addObjectsToLayer();
+
 			trace("layers created");
 		}
 		/**
@@ -79,12 +78,12 @@ package isohill.tmx
 		}
 		private function makeSprites(cellX:int, cellY:int):void {
 			// in layers
-			for (var i:int = 0; i < tmx.tileLayersArray.length; i++) {
-				var layer:TMXTileLayer = tmx.tileLayersArray[i];
-                if (layer == null) {
+			for (var i:int = 0; i < tmx.layers.length; i++) {
+				var layer:TMXLayer = tmx.layers[i];
+                if (layer == null || layer.getType() != "tileLayer") {
                     continue;
                 }
-                makeLayerSprites(layer, linkedLayer[i], cellX, cellY);
+                makeTileLayerSprites(layer as TMXTileLayer, linkedLayer[i], cellX, cellY);
 
 //				var _cell:int = layer.getCell(cellX, cellY); // temp
 //				if (_cell == 0 || isNaN(_cell)) continue;
@@ -101,7 +100,7 @@ package isohill.tmx
 			
 		}
 
-        private function makeLayerSprites(layer:TMXTileLayer, grid:GridDisplay,  cellX:int, cellY:int):void {
+        private function makeTileLayerSprites(layer:TMXTileLayer, grid:GridDisplay,  cellX:int, cellY:int):void {
             var _cell:int = layer.getCell(cellX, cellY); // temp
             if (_cell == 0 || isNaN(_cell)) {
                 return;
@@ -121,18 +120,42 @@ package isohill.tmx
 		 * @param group
 		 * 
 		 */
-		public function addObjectsToLayer(grid:GridDisplay, group:TMXObjectgroup):void {
-			for each(var obj:TMXObject in group.objects) {
-				var tile:TMXTileset = tmx.tilesets[obj.gid];
-				// TODO: this is not working as the texture hasn't loaded yet when this method is called
-				//var texure:Texture = AssetManager.instance.getTexture(tmx.imgsURL + tile.source.source, obj.gid - tile.firstgid); 
-				var id:String = tmx.getImgSrc(obj.gid);
-				var sprite:IsoMovieClip = new IsoMovieClip(id, String(grid.numChildren), new Point3(obj.x, obj.y));
-				sprite.name = obj.name; 
-				sprite.type = obj.type;
-				sprite.currentFrame = tmx.getImgFrame( obj.gid );
-				grid.add(sprite);
-			}
+		public function addObjectsToLayer():void {
+            for (var i:int = 0; i < tmx.layers.length; i++) {
+                var layer:TMXLayer = tmx.layers[i];
+                if (layer == null || layer.getType() != "objectLayer") {
+                    continue;
+                }
+
+                var grid:GridDisplay = linkedLayer[i];
+                var objLayer:TMXObjectgroup = layer as TMXObjectgroup;
+
+                for (var j:int = 0; j <  objLayer.objects.length; j++) {
+                    var obj:TMXObject = objLayer.objects[j];
+                    if (obj.gid <= 0) {
+                        continue;
+                    }
+                    var id:String = tmx.getImgSrc(obj.gid);
+                    // TODO: in wrong spot
+                    var sprite:IsoMovieClip = new IsoMovieClip(id, obj.name, new Point3(obj.x, obj.y));
+                    sprite.name = obj.name;
+                    sprite.type = obj.type;
+                    sprite.currentFrame = tmx.getImgFrame( obj.gid );
+                    grid.add(sprite);
+                }
+
+            }
+//            for each(var obj:TMXObject in group.objects) {
+////				var tile:TMXTileset = tmx.tilesets[obj.gid];
+////				TODO: this is not working as the texture hasn't loaded yet when this method is called
+//				//var texure:Texture = AssetManager.instance.getTexture(tmx.imgsURL + tile.source.source, obj.gid - tile.firstgid);
+//				var id:String = tmx.getImgSrc(obj.gid);
+//				var sprite:IsoMovieClip = new IsoMovieClip(id, String(grid.numChildren), new Point3(obj.x, obj.y));
+//				sprite.name = obj.name;
+//				sprite.type = obj.type;
+//				sprite.currentFrame = tmx.getImgFrame( obj.gid );
+//				grid.add(sprite);
+//			}
 		}
 		/**
 		 * Creates a GridDisplay layer that is like the layer found in the TMX format with correct projection and sizing

@@ -3,6 +3,8 @@ package isohill.tmx {
 import flash.utils.Dictionary;
 
 public interface TMXLayer {
+    function getType():String;
+    function hash():String;
     function get name():String;
     function set name(name:String):void;
     function get index():int;

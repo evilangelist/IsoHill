@@ -44,6 +44,13 @@ import isohill.GridInt;
 			return layer;
 		}
 
+        public function getType():String {
+            return 'tileLayer';
+        }
+
+        public function hash():String {
+            return getType() + name + index;
+        }
 
         public function get name():String {
             return _name;
