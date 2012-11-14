@@ -79,8 +79,8 @@ package isohill.tmx
 		}
 		private function makeSprites(cellX:int, cellY:int):void {
 			// in layers
-			for (var i:int = 0; i < tmx.layersArray.length; i++) {
-				var layer:TMXTileLayer = tmx.layersArray[i];
+			for (var i:int = 0; i < tmx.tileLayersArray.length; i++) {
+				var layer:TMXTileLayer = tmx.tileLayersArray[i];
                 if (layer == null) {
                     continue;
                 }

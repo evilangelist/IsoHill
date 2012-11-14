@@ -27,9 +27,12 @@ package isohill.tmx
 		public var height:int=0; // number of cells down
 		public var tileWidth:int=0; // pixel size of cell width
 		public var tileHeight:int = 0; // pixel size of cell height
+
+        public var layers:Vector.<TMXLayer> = new <TMXLayer>[];
+
 		// --- layer data accessibile by both vector and dictionary
-		public var layersArray:Vector.<TMXTileLayer>; // layers of a grid of ints
-		public var layersHash:Dictionary; // key is the layer name; values are TMXLayer
+		public var tileLayersArray:Vector.<TMXTileLayer>; // layers of a grid of ints
+		public var tileLayersHash:Dictionary; // key is the layer name; values are TMXLayer
 		// --- object layer data accessibile by both vector and dictionary
 		public var objectsArray:Vector.<TMXObjectgroup>; // layers of TMXObjectgroup
 		public var objectsHash:Dictionary; // key is the layer name; values are TMXObjectgroup
@@ -56,6 +59,10 @@ package isohill.tmx
 			parseLayers();
 			parseObjects();
 			parseTilesets();
+
+            layers.sort(function (x:TMXLayer, y:TMXLayer):Number {
+                return x.index < y.index ? -1 : x.index > y.index ? 1 : 0;
+            });
 		}
 		public function getImgSrc(gid:int):String {
 			return imgsURL + tilesets[gid].source.source;
@@ -119,12 +126,14 @@ package isohill.tmx
 				}
 				objectsArray.push(group);
 				objectsHash[group.name] = group;
+
+                layers.push(group);
 			}
 		}
 		private function parseLayers():void {
 			var layerBlocks:XMLList = data.layer;
-			layersArray = new Vector.<TMXTileLayer>(layerBlocks.length(), true);
-			layersHash = new Dictionary();
+			tileLayersArray = new Vector.<TMXTileLayer>(layerBlocks.length(), true);
+			tileLayersHash = new Dictionary();
 			var y:int = 0;
 			for each(var layerBlock:XML in layerBlocks) {
 				var w:int = int(layerBlock.@width);
@@ -144,11 +153,13 @@ package isohill.tmx
 				else throw new Error("Invalid tmx encoding: " + encoding);
 				
 				maxGid = Math.max(layer.maxGid, maxGid);
-				layersArray[y++] = layer;
-				layersHash[name] = layer;
+				tileLayersArray[y++] = layer;
+				tileLayersHash[name] = layer;
 				layer.name = name;
                 layer.index = layerBlock.childIndex();
-			}
+
+                layers.push(layer);
+            }
 		}
 		// Handlers loading the TMX file for you
 		static public function loadTMX(basePath:String, file:String, tmxCallback:Function):void {
