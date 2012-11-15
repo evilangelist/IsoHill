@@ -63,7 +63,7 @@ package isohill.tmx
 				var propBlocks:XMLList = tilePropBlock.properties[0].elements('property');
 				for each(var prop:XML in propBlocks) {
 					var name:String = prop.@name.toString();
-					var val:String = prop.@name.toString();
+					var val:String = prop.@value.toString();
 					if (tileProperties[ id ] == null) tileProperties[ id ] = {};
 					tileProperties[ id ][ name ] = val;
 				}
@@ -72,8 +72,12 @@ package isohill.tmx
 		public function getProps(gid:int):Object {
 			return getPropsByID(int(gid - firstgid).toString());
 		}
+		public function getPropertyValue(gid:int, property:String):Object {
+            var props:Object = getProps(gid);
+            return props[property];
+		}
 		public function getPropsByID(id:String):Object {
-			var val:Dictionary = tileProperties[ id ];
+			var val:Object = tileProperties[ id ];
 			return val?val:{};
 		}
 	}

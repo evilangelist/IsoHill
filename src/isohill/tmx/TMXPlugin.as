@@ -72,7 +72,7 @@ import isohill.State;
 		}
 		private function loadTiles():void {
 			for each(var tile:TMXTileset in tmx.uniqueTilesets) {
-				var loader:SpriteSheetLoader = new SpriteSheetLoader(tmx.getImgSrc(tile.firstgid), tile.areas, null, tile.getPropsByID(TILE_PROPERTY_HIT_MAP)==TILE_PROPERTY_HIT_MAP_VALUE);
+				var loader:SpriteSheetLoader = new SpriteSheetLoader(tmx.getImgSrc(tile.firstgid), tile.areas, null, tile.getPropertyValue(tile.firstgid, TILE_PROPERTY_HIT_MAP)==TILE_PROPERTY_HIT_MAP_VALUE);
 				AssetManager.instance.addLoader(loader);
 			}
 		}
@@ -110,6 +110,7 @@ import isohill.State;
             var assetID:String = tmx.getImgSrc(_cell);
             var sprite:IsoMovieClip = new IsoMovieClip(assetID, name, pt3, new State("", 0, 0, true));//IsoSprite = new IsoSprite(assetID, name, pt3);
             sprite.currentFrame = tmx.getImgFrame(_cell);
+            sprite.initialFrame = _cell;
 
             grid.add(sprite);
         }
@@ -141,6 +142,7 @@ import isohill.State;
                     sprite.name = obj.name;
                     sprite.type = obj.type;
                     sprite.currentFrame = tmx.getImgFrame( obj.gid );
+                    sprite.initialFrame = obj.gid;
                     grid.add(sprite);
                 }
 

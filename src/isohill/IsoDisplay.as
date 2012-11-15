@@ -49,7 +49,10 @@ package isohill
 		internal var layer:GridDisplay; // backward reference to the container (internal use only)
 		internal var layerIndex:int = -1; // cell index container (internal use only)
 		private var async:AsyncTexture;
-		/**
+
+        private var _initialFrame:int = -1;
+
+        /**
 		 * Must be given a texture or set with setTexture before use
 		 * @param assetID loader ID (see AssetManager)
 		 * @param name name of the element
@@ -124,5 +127,14 @@ package isohill
 				component.advanceTime(time); // run the components that don't require an image reference on the IsoSprite if it hasn't been loaded yet
 			}
 		}
-	}	
+
+        public function get initialFrame():int {
+            return _initialFrame;
+        }
+
+        public function set initialFrame(value:int):void {
+            _initialFrame = value;
+        }
+
+    }
 }
